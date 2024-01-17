@@ -1,0 +1,279 @@
+.subjectCard {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 50px;
+    margin-top: 40px;
+}
+
+.section1, .section2 {
+    display: flex;
+    flex-direction: column;
+}
+
+.timePosted {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    margin-left: 50px;
+    margin-top: 40px;
+
+}
+
+.timePostedText {
+    font-size: 18px;
+    font-weight: normal;
+    font-style: normal;
+    text-align: left;
+    letter-spacing: 2px;
+    color: #222222;
+    opacity: 0.8;
+    padding-left: 3px;
+}
+
+@media (min-width: 1025px) {
+    .subjectCard {
+        flex-direction: row;
+        gap: 25px;
+    }
+
+    .section1 {
+        flex: 0 0 35%;
+    }
+
+    .section2 {
+        flex: 1;
+    }
+}
+
+.attendance {
+    display: flex;
+    padding-top: 35px;
+    padding-left: 30px;
+    padding-bottom: 35px;
+    background-color: #E9EFFD;
+    border-radius: 6px;
+    align-items: center;
+}
+
+.sectionLabel {
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    text-align: left;
+    color: #696e7c;
+}
+
+.subjectTitle {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.subjectName {
+    display: flex;
+    align-items: center;
+}
+
+.subjectNameText {
+    font-size: 24px;
+    font-weight: normal;
+    font-style: normal;
+    text-align: left;
+    color: #000000;
+}
+
+.iconAddSubject {
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #78ee89;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+
+.activeIcon {
+    margin-right: 7px;
+}
+
+.attendanceRoundedTop {
+    border-radius: 6px 6px 0 0;
+}
+
+.externalLink {
+    display: flex;
+    padding-top: 35px;
+    padding-left: 30px;
+    padding-bottom: 35px;
+    background-color: #E9EFFD;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    align-items: center;
+    justify-content: center;
+    border-top-width: 2px;
+    border-top-color: #E0E2E8;
+}
+
+.externalLinkText {
+    padding-right: 6px;
+    cursor: pointer;
+}
+
+.subjectImage {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    margin-bottom: 30px;
+}
+
+.subjectCoverImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.addSubjectImageButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    color: black;
+    border-radius: 3px;
+    background: #ffffff;
+    padding-inline: 16px;
+    padding-block: 16px;
+    cursor: pointer;
+
+}
+
+/* Hiding the checkbox */
+#toggleButton {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 16px;
+}
+
+.switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: grey;
+    transition: .4s;
+    border-radius: 16px;
+}
+
+.switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: -4px;
+    bottom: -4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .slider {
+    background-color: #175FFF;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+.toggleText {
+    padding-left: 15px;
+}
+
+
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.subjectDescription {
+    margin-bottom: 30px;
+}
+
+.input-containerTime {
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+}
+
+.icon-input {
+    display: flex;
+    align-items: center;
+    border-color: #e0e2e8;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.textAreaInput {
+    display: flex;
+    align-items: center;
+    border-color: #e0e2e8;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+}
+
+
+.icon-input .fa-icon {
+    margin-right: 10px;
+}
+
+input[type="text"] {
+    border: none;
+    outline: none;
+    padding: 8px;
+    flex-grow: 1;
+}
+
+input[type="text"]::placeholder {
+    color: #888;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+.startEndTime {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    .startEndTime {
+        display: block;
+    }
+
+    .input-containerTime {
+        width: 100%;
+    }
+}
+
