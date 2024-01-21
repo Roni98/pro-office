@@ -1,20 +1,23 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment,} from "react";
 import {subjectImage} from "../../assets/images";
 import './SubjectCard.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCircle, faRefresh, faExternalLink, faPencil, faSquare, faEllipsisV} from '@fortawesome/free-solid-svg-icons';
 import {Subject} from "../../config/interfaces";
 
-const SubjectCard = ({key, subject}: { key: number, subject: Subject }) => {
-    const [isToggled, setIsToggled] = useState(false);
-
-    const handleToggle = () => {
-        setIsToggled(!isToggled);
-    }
-
+const SubjectCard = (
+    {
+        subjectKey,
+        subject,
+        onToggleAttendance,
+    } : {
+        subjectKey: number,
+        subject: Subject,
+        onToggleAttendance: (subjectKey: number) => void,
+    }) => {
 
     return (
-        <Fragment key={key}>
+        <Fragment key={subjectKey}>
             <div className={'timePosted'}>
                 <FontAwesomeIcon icon={faCircle}/>
                 <div className={'timePostedText'}>
@@ -31,16 +34,21 @@ const SubjectCard = ({key, subject}: { key: number, subject: Subject }) => {
                         </div>
                     </div>
                     <div className={'mb-4'}>
-                        <div className={`attendance ${isToggled ? 'attendanceRoundedTop' : ''}`}>
+                        <div className={`attendance ${subject.attendance ? 'attendanceRoundedTop' : ''}`}>
                             <label className="switch">
-                                <input type="checkbox" id="toggleButton" onChange={handleToggle}/>
+                                <input
+                                    type="checkbox"
+                                    id="toggleButton"
+                                    checked={subject.attendance}
+                                    onChange={() => onToggleAttendance(subjectKey)}
+                                />
                                 <span className="slider"></span>
                             </label>
                             <div className={'toggleText'}>
                                 Required attendance
                             </div>
                         </div>
-                        {isToggled && (
+                        {subject.attendance && (
                             <div className={'externalLink'}>
                                 <div className={'externalLinkText'}>
                                     Attendance tracking QR code
@@ -58,7 +66,12 @@ const SubjectCard = ({key, subject}: { key: number, subject: Subject }) => {
                             </div>
                             <div className={'subjectName'}>
                                 <div className={'activeIcon'}>
-                                    <FontAwesomeIcon width={12} height={12} color={'#30A1FF'} icon={faSquare}/>
+                                    <FontAwesomeIcon
+                                        width={12}
+                                        height={12}
+                                        color={'#30A1FF'}
+                                        icon={faSquare}
+                                    />
                                 </div>
                                 <div className={'subjectNameText'}>
                                     {subject.name}
@@ -74,32 +87,47 @@ const SubjectCard = ({key, subject}: { key: number, subject: Subject }) => {
                     </div>
                     <div className={'startEndTime'}>
                         <div className="input-containerTime">
-                            <label htmlFor="myInput" className={'sectionLabel'}>Subject start time</label>
+                            <label htmlFor="startTime" className={'sectionLabel'}>Subject start time</label>
                             <div className="icon-input">
                                 <FontAwesomeIcon icon={faCircle}/>
-                                <input type="text" id="myInput" value={subject.startTime} placeholder="Enter time"/>
+                                <input
+                                    type="text"
+                                    id="startTime"
+                                    defaultValue={subject.startTime}
+                                    placeholder="Enter time"
+                                />
                             </div>
                         </div>
                         <div className="input-containerTime">
-                            <label htmlFor="myInput" className={'sectionLabel'}>Subject end time</label>
+                            <label htmlFor="endTime" className={'sectionLabel'}>Subject end time</label>
                             <div className="icon-input">
                                 <FontAwesomeIcon icon={faCircle}/>
-                                <input type="text" id="myInput" value={subject.endTime} placeholder="Enter time"/>
+                                <input
+                                    type="text"
+                                    id="endTime"
+                                    defaultValue={subject.endTime}
+                                    placeholder="Enter time"
+                                />
                             </div>
                         </div>
                     </div>
                     <div className={'subjectDescription'}>
                         <div className="input-container">
-                            <label htmlFor="myInput" className={'sectionLabel'}>Subject description</label>
+                            <label htmlFor="description" className={'sectionLabel'}>Subject description</label>
                             <div className="textAreaInput">
-                                <textarea value={subject.description} className={'w-full p-2'} rows={5} id="myInput" placeholder="Enter text"/>
+                                <textarea
+                                    defaultValue={subject.description}
+                                    className={'w-full p-2'}
+                                    rows={5}
+                                    id="description"
+                                    placeholder="Enter text"
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </Fragment>
-
     )
 }
 

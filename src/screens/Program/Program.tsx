@@ -106,7 +106,7 @@ const Program = () => {
                 </div>
                 <div className="tabBar">
                     <div
-                        className={`tab ${activeTab === 'Analytics' ? 'active' : ''} ${'Tab 1' === 'Tab 1' ? 'disabled' : ''}`}
+                        className={`tab disabled ${activeTab === 'Analytics' ? 'active' : ''}`}
                         onClick={() => handleTabClick('Analytics')}
                     >
                         Analytics

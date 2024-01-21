@@ -12,7 +12,8 @@ export const mockSubjects: Subject[] = [
         startTime: "08:30",
         endTime: "10:15",
         gapTime: "1:45",
-        description: "Introduction to algebra and geometry"
+        description: "Introduction to algebra and geometry",
+        attendance: false,
     },
     {
         id: 2,
@@ -20,7 +21,8 @@ export const mockSubjects: Subject[] = [
         startTime: "10:30",
         endTime: "12:00",
         gapTime: "1:30",
-        description: "Fundamentals of mechanics and thermodynamics"
+        description: "Fundamentals of mechanics and thermodynamics",
+        attendance: false,
     },
     {
         id: 3,
@@ -38,25 +40,37 @@ const Schedules = () => {
     const [showAddForm, setShowAddForm] = useState(false);
 
     const handleAddSubject = (newSubject: Subject) => {
-        setSubjects([...subjects, newSubject]);
+        setSubjects([newSubject, ...subjects]);
         setShowAddForm(false); // Hide the form after adding
     };
+
+    const handleToggleAttendance = (subjectId: number) => {
+        setSubjects(subjects.map(subject => {
+            if (subject.id === subjectId) {
+                return { ...subject, attendance: !subject.attendance };
+            }
+            return subject;
+        }));
+    };
+
 
     const toggleAddForm = () => {
         setShowAddForm(!showAddForm);
     };
 
-
-    console.log(showAddForm, 'dssdssdsdds')
-
     return (
-        <div className={'schedules'}>
+        <>
             <AddSubjectCard addSubject={toggleAddForm}/>
             {showAddForm && <AddSubjectForm onAddSubject={handleAddSubject} />}
             {subjects.map(subject => (
-                <SubjectCard key={subject.id} subject={subject} />
+                <SubjectCard
+                    key={subject.id}
+                    subjectKey={subject.id}
+                    subject={subject}
+                    onToggleAttendance={handleToggleAttendance}
+                />
             ))}
-        </div>
+        </>
     )
 }
 

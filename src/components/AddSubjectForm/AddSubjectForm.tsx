@@ -10,29 +10,54 @@ import {
     faSquare,
     faEllipsisV
 } from '@fortawesome/free-solid-svg-icons';
-import {Subject} from "../../config/interfaces";
+import {AddSubject, Subject} from "../../config/interfaces";
 
 const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) => void; }) => {
-    const [subjectTitle, setSubjectTitle] = useState<string>("");
-    const [startTime, setStartTime] = useState<string>("");
-    const [endTime, setEndTime] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
-    const [isToggled, setIsToggled] = useState<boolean>(false);
-
-    const handleToggle = () => {
-        setIsToggled(!isToggled);
-    };
+    const [formState, setFormState] = useState<AddSubject>({
+        name: "",
+        startTime: "",
+        endTime: "",
+        description: "",
+        attendance: false,
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Convert times to Date objects for comparison
+        const startTime = new Date(`1970-01-01T${formState.startTime}`);
+        const endTime = new Date(`1970-01-01T${formState.endTime}`);
+
+        if (endTime <= startTime) {
+            alert('End time cannot be earlier than start time.');
+            return;
+        }
+
         const newSubject: Subject = {
             id: Math.random(),
-            name: subjectTitle,
-            startTime,
-            endTime,
-            description,
+            name: formState.name,
+            startTime: formState.startTime,
+            endTime: formState.endTime,
+            description: formState.description,
+            attendance: formState.attendance,
         };
         onAddSubject(newSubject);
+    };
+
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormState(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleToggle = () => {
+        setFormState(prevState => ({
+            ...prevState,
+            attendance: !prevState.attendance
+        }));
     };
 
 
@@ -48,16 +73,22 @@ const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) =
                         </div>
                     </div>
                     <div className={'mb-4'}>
-                        <div className={`attendance ${isToggled ? 'attendanceRoundedTop' : ''}`}>
+                        <div className={`attendance ${formState.attendance ? 'attendanceRoundedTop' : ''}`}>
                             <label className="switch">
-                                <input type="checkbox" id="toggleButton" onChange={handleToggle}/>
+                                <input
+                                    hidden={true}
+                                    type="checkbox"
+                                    id="attendance"
+                                    name="attendance"
+                                    onChange={handleToggle}
+                                />
                                 <span className="slider"></span>
                             </label>
                             <div className={'toggleText'}>
                                 Required attendance
                             </div>
                         </div>
-                        {isToggled && (
+                        {formState.attendance && (
                             <div className={'externalLink'}>
                                 <div className={'externalLinkText'}>
                                     Attendance tracking QR code
@@ -75,14 +106,26 @@ const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) =
                             </div>
                             <div className={'subjectName'}>
                                 <div className={'activeIcon'}>
-                                    <FontAwesomeIcon width={12} height={12} color={'#30A1FF'} icon={faSquare}/>
+                                    <FontAwesomeIcon
+                                        width={12}
+                                        height={12}
+                                        color={'#30A1FF'}
+                                        icon={faSquare}
+                                    />
                                 </div>
                                 <div className={'subjectNameText'}>
                                     <div className="input-container">
                                         <div className="textAreaInput">
-                                            <input type={'text'} value={subjectTitle}
-                                                   onChange={(e) => setSubjectTitle(e.target.value)}
-                                                   className={'w-full p-2'} id="myInput" placeholder="Enter title"/>
+                                            <input
+                                                required={true}
+                                                type={'text'}
+                                                value={formState.name}
+                                                onChange={handleInputChange}
+                                                name="name"
+                                                className={'w-full p-2'}
+                                                id="name"
+                                                placeholder="Enter title"
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -97,36 +140,52 @@ const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) =
                     </div>
                     <div className={'startEndTime'}>
                         <div className="input-containerTime">
-                            <label htmlFor="myInput" className={'sectionLabel'}>Subject start time</label>
+                            <label htmlFor="startTime" className={'sectionLabel'}>Subject start time</label>
                             <div className="icon-input">
                                 <FontAwesomeIcon icon={faCircle}/>
-                                <input type="text" id="myInput" value={startTime}
-                                       onChange={(e) => setStartTime(e.target.value)} placeholder="Enter time"/>
+                                <input
+                                    type="time"
+                                    required={true}
+                                    id="startTime"
+                                    name={'startTime'}
+                                    value={formState.startTime}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter time"/>
                             </div>
                         </div>
                         <div className="input-containerTime">
-                            <label htmlFor="myInput" className={'sectionLabel'}>Subject end time</label>
+                            <label htmlFor="endTime" className={'sectionLabel'}>Subject end time</label>
                             <div className="icon-input">
                                 <FontAwesomeIcon icon={faCircle}/>
-                                <input type="text" id="myInput" value={endTime}
-                                       onChange={(e) => setEndTime(e.target.value)} placeholder="Enter time"/>
+                                <input
+                                    type="time"
+                                    required={true}
+                                    id="endTime"
+                                    value={formState.endTime}
+                                    name="endTime"
+                                    onChange={handleInputChange}
+                                    placeholder="Enter time"/>
                             </div>
                         </div>
                     </div>
                     <div className={'subjectDescription'}>
                         <div className="input-container">
-                            <label htmlFor="myInput" className={'sectionLabel'}>Subject description</label>
+                            <label htmlFor="description" className={'sectionLabel'}>Subject description</label>
                             <div className="textAreaInput">
-                                <textarea value={description}
-                                          onChange={(e) => setDescription(e.target.value)} className={'w-full p-2'}
-                                          rows={5} id="myInput" placeholder="Enter text"/>
+                                <textarea
+                                    value={formState.description}
+                                    onChange={handleInputChange}
+                                    className={'w-full p-2'}
+                                    rows={5}
+                                    name="description"
+                                    id="description"
+                                    placeholder="Enter description"/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-
     )
 }
 
