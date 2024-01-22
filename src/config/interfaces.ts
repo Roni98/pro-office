@@ -6,6 +6,7 @@ export interface Subject {
     gapTime?: string;
     description?: string;
     attendance: boolean;
+    image?: string;
 }
 
 export interface AddSubject {
@@ -15,4 +16,5 @@ export interface AddSubject {
     gapTime?: string;
     description?: string;
     attendance: boolean;
+    image?: string;
 }

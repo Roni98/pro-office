@@ -90,6 +90,18 @@
     cursor: pointer;
 }
 
+.iconSave {
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #aceca3;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
 .dropdownMenu {
     display: block;
     position: absolute;
@@ -178,6 +190,15 @@
     cursor: not-allowed;
 }
 
+.titleInput {
+    display: flex;
+    align-items: center;
+    border-color: #e0e2e8;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    padding-inline: 5px;
+}
 
 
 @media (max-width: 600px) {

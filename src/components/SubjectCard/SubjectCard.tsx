@@ -1,4 +1,4 @@
-import React, {Fragment,} from "react";
+import React, {Fragment, useRef,} from "react";
 import {subjectImage} from "../../assets/images";
 import './SubjectCard.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -10,11 +10,19 @@ const SubjectCard = (
         subject,
         onToggleAttendance,
         onEdit,
+        onImageChange,
     } : {
         subject: Subject,
         onToggleAttendance: (subjectKey: number) => void,
         onEdit: (subject: Subject) => void,
+        onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
     }) => {
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleAddImageClick = () => {
+        fileInputRef.current?.click();
+    };
 
     return (
         <Fragment key={subject.id}>
@@ -27,11 +35,18 @@ const SubjectCard = (
             <div className={'subjectCard'}>
                 <div className={'section1'}>
                     <div className={'subjectImage'}>
-                        <img className={'subjectCoverImage'} alt={'subjectImage'} src={subjectImage}/>
-                        <div className='addSubjectImageButton'>
+                        <img className={'subjectCoverImage'} alt={'subjectImage'} src={subject.image || subjectImage}/>
+                        <div className='addSubjectImageButton' onClick={handleAddImageClick}>
                             <FontAwesomeIcon className='icon' icon={faRefresh}/>
                             <p>Change program cover</p>
                         </div>
+                        <input
+                            type='file'
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={onImageChange}
+                            accept='image/*'
+                        />
                     </div>
                     <div className={'mb-4'}>
                         <div className={`attendance ${subject.attendance ? 'attendanceRoundedTop' : ''}`}>

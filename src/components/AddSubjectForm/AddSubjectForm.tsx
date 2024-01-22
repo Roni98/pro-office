@@ -21,6 +21,22 @@ const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectForm
     ({ onAddSubject, editingSubject }, ref) => {
 
     const nameInputRef = useRef<HTMLInputElement>(null);
+    const [image, setImage] = useState(editingSubject?.image || undefined);
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const triggerFileInputClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+                setImage(e.target?.result as string); // Update the image state
+            };
+            fileReader.readAsDataURL(event.target.files[0]);
+        }
+    };
 
     useImperativeHandle(ref, () => ({
         focusNameInput: () => {
@@ -36,6 +52,7 @@ const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectForm
             endTime: "",
             description: "",
             attendance: false,
+            image: "",
         };
     const [formState, setFormState] = useState<AddSubject>(initialState);
 
@@ -53,7 +70,7 @@ const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectForm
 
         if (editingSubject) {
             // Update existing subject
-            onAddSubject({ ...editingSubject, ...formState });
+            onAddSubject({ ...editingSubject, ...formState, image });
 
         } else {
             const newSubject: Subject = {
@@ -63,6 +80,7 @@ const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectForm
                 endTime: formState.endTime,
                 description: formState.description,
                 attendance: formState.attendance,
+                image: image,
             };
             onAddSubject(newSubject);
         }
@@ -89,12 +107,20 @@ const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectForm
         <form onSubmit={handleSubmit}>
             <div className={'subjectCard'}>
                 <div className={'section1'}>
-                    <div className={'subjectImage'}>
-                        <img className={'subjectCoverImage'} alt={'subjectImage'} src={subjectImage}/>
+                    <div className={'subjectImage'} onClick={triggerFileInputClick}>
+                        <img className={'subjectCoverImage'} alt={'subjectImage'} src={image || subjectImage}/>
                         <div className='addSubjectImageButton'>
                             <FontAwesomeIcon className='icon' icon={faRefresh}/>
                             <p>Change program cover</p>
                         </div>
+                        <input
+                            type="file"
+                            id="imageUpload"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleImageChange}
+                            accept="image/*"
+                        />
                     </div>
                     <div className={'mb-4'}>
                         <div className={`attendance ${formState.attendance ? 'attendanceRoundedTop' : ''}`}>

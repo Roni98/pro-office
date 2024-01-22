@@ -73,6 +73,19 @@ const Schedules = () => {
         setShowAddForm(!showAddForm);
     };
 
+    const handleFileInputChange = (subjectId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+                const newImage = e.target?.result;
+                setSubjects(subjects.map(subject =>
+                    subject.id === subjectId ? {...subject, image: newImage as string} : subject
+                ));
+            };
+            fileReader.readAsDataURL(event.target.files[0]);
+        }
+    };
+
     return (
         <>
             <AddSubjectCard addSubject={toggleAddForm}/>
@@ -89,6 +102,7 @@ const Schedules = () => {
                     subject={subject}
                     onToggleAttendance={handleToggleAttendance}
                     onEdit={handleEditSubject}
+                    onImageChange={(event) => handleFileInputChange(subject.id, event)}
                 />
             ))}
         </>

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {programCover} from "../../assets";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faRefresh, faPencil, faEllipsisH, faCaretDown} from '@fortawesome/free-solid-svg-icons';
+import {faRefresh, faPencil, faEllipsisH, faCaretDown, faCheck} from '@fortawesome/free-solid-svg-icons';
 import './Program.css';
 import {Schedules, Overview} from "../../components";
 
@@ -10,6 +10,12 @@ const Program = () => {
     const [selectedOption, setSelectedOption] = useState(options[0]);
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => setIsOpen(!isOpen);
+    const [programTitle, setProgramTitle,] = useState('Some program title')
+    const [edit, setEdit,] = useState(false)
+
+    const editTitle = () => {
+        setEdit(!edit)
+    }
 
     const handleOptionClick = (option: string) => {
         setSelectedOption(option);
@@ -68,12 +74,31 @@ const Program = () => {
                             Program Title
                         </div>
                         <div className={'programName'}>
-                            <div className={'programNameText'}>
-                                Some subject title
-                            </div>
-                            <div className={'iconEdit'}>
-                                <FontAwesomeIcon icon={faPencil}/>
-                            </div>
+                            {
+                                edit ? (
+                                    <>
+                                        <div className="icon-input">
+                                            <input
+                                                value={programTitle}
+                                                type={'text'}
+                                                onChange={(e) => setProgramTitle(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className={'iconSave'} onClick={editTitle}>
+                                            <FontAwesomeIcon icon={faCheck}/>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className={'programNameText'}>
+                                            {programTitle}
+                                        </div>
+                                        <div className={'iconEdit'} onClick={editTitle}>
+                                            <FontAwesomeIcon icon={faPencil}/>
+                                        </div>
+                                    </>
+                                )
+                            }
                         </div>
                     </div>
                     <div className={'headerRight'}>
