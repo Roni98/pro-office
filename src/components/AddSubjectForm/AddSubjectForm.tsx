@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {subjectImage} from "../../assets/images";
 import './AddSubjectForm.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -12,14 +12,32 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {AddSubject, Subject} from "../../config/interfaces";
 
-const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) => void; }) => {
-    const [formState, setFormState] = useState<AddSubject>({
-        name: "",
-        startTime: "",
-        endTime: "",
-        description: "",
-        attendance: false,
-    });
+interface AddSubjectFormProps {
+    onAddSubject: (newSubject: Subject) => void;
+    editingSubject?: Subject | null;
+}
+
+const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectFormProps>(
+    ({ onAddSubject, editingSubject }, ref) => {
+
+    const nameInputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => ({
+        focusNameInput: () => {
+            nameInputRef.current?.focus();
+        },
+    }));
+
+    const initialState: AddSubject = editingSubject
+        ? { ...editingSubject }
+        : {
+            name: "",
+            startTime: "",
+            endTime: "",
+            description: "",
+            attendance: false,
+        };
+    const [formState, setFormState] = useState<AddSubject>(initialState);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,15 +51,21 @@ const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) =
             return;
         }
 
-        const newSubject: Subject = {
-            id: Math.random(),
-            name: formState.name,
-            startTime: formState.startTime,
-            endTime: formState.endTime,
-            description: formState.description,
-            attendance: formState.attendance,
-        };
-        onAddSubject(newSubject);
+        if (editingSubject) {
+            // Update existing subject
+            onAddSubject({ ...editingSubject, ...formState });
+
+        } else {
+            const newSubject: Subject = {
+                id: Math.random(),
+                name: formState.name,
+                startTime: formState.startTime,
+                endTime: formState.endTime,
+                description: formState.description,
+                attendance: formState.attendance,
+            };
+            onAddSubject(newSubject);
+        }
     };
 
 
@@ -80,6 +104,7 @@ const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) =
                                     type="checkbox"
                                     id="attendance"
                                     name="attendance"
+                                    checked={formState.attendance}
                                     onChange={handleToggle}
                                 />
                                 <span className="slider"></span>
@@ -119,6 +144,7 @@ const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) =
                                             <input
                                                 required={true}
                                                 type={'text'}
+                                                ref={nameInputRef}
                                                 value={formState.name}
                                                 onChange={handleInputChange}
                                                 name="name"
@@ -187,6 +213,6 @@ const AddSubjectForm = ({onAddSubject,}: { onAddSubject: (newSubject: Subject) =
             </div>
         </form>
     )
-}
+});
 
 export {AddSubjectForm,};

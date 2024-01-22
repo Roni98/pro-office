@@ -7,17 +7,17 @@ import {Subject} from "../../config/interfaces";
 
 const SubjectCard = (
     {
-        subjectKey,
         subject,
         onToggleAttendance,
+        onEdit,
     } : {
-        subjectKey: number,
         subject: Subject,
         onToggleAttendance: (subjectKey: number) => void,
+        onEdit: (subject: Subject) => void,
     }) => {
 
     return (
-        <Fragment key={subjectKey}>
+        <Fragment key={subject.id}>
             <div className={'timePosted'}>
                 <FontAwesomeIcon icon={faCircle}/>
                 <div className={'timePostedText'}>
@@ -40,7 +40,7 @@ const SubjectCard = (
                                     type="checkbox"
                                     id="toggleButton"
                                     checked={subject.attendance}
-                                    onChange={() => onToggleAttendance(subjectKey)}
+                                    onChange={() => onToggleAttendance(subject.id)}
                                 />
                                 <span className="slider"></span>
                             </label>
@@ -76,7 +76,7 @@ const SubjectCard = (
                                 <div className={'subjectNameText'}>
                                     {subject.name}
                                 </div>
-                                <div className={'iconEditSubject'}>
+                                <div className={'iconEditSubject'} onClick={() => onEdit(subject)}>
                                     <FontAwesomeIcon icon={faPencil}/>
                                 </div>
                             </div>
@@ -93,7 +93,8 @@ const SubjectCard = (
                                 <input
                                     type="text"
                                     id="startTime"
-                                    defaultValue={subject.startTime}
+                                    readOnly={true}
+                                    value={subject.startTime}
                                     placeholder="Enter time"
                                 />
                             </div>
@@ -105,7 +106,8 @@ const SubjectCard = (
                                 <input
                                     type="text"
                                     id="endTime"
-                                    defaultValue={subject.endTime}
+                                    readOnly={true}
+                                    value={subject.endTime}
                                     placeholder="Enter time"
                                 />
                             </div>
@@ -116,7 +118,8 @@ const SubjectCard = (
                             <label htmlFor="description" className={'sectionLabel'}>Subject description</label>
                             <div className="textAreaInput">
                                 <textarea
-                                    defaultValue={subject.description}
+                                    readOnly={true}
+                                    value={subject.description}
                                     className={'w-full p-2'}
                                     rows={5}
                                     id="description"

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import './Schedules.css';
 import {AddSubjectCard} from "../AddSubjectCard";
 import {SubjectCard} from "../SubjectCard";
@@ -38,10 +38,25 @@ export const mockSubjects: Subject[] = [
 const Schedules = () => {
     const [subjects, setSubjects] = useState<Subject[]>(mockSubjects);
     const [showAddForm, setShowAddForm] = useState(false);
+    const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
+    const addSubjectFormRef = useRef<{ focusNameInput: () => void }>(null);
+
+
+    const handleEditSubject = (subject: Subject) => {
+        setEditingSubject(subject);
+        setShowAddForm(true); // Show the form for editing
+        setTimeout(() => addSubjectFormRef.current?.focusNameInput(), 5);
+    };
+
 
     const handleAddSubject = (newSubject: Subject) => {
-        setSubjects([newSubject, ...subjects]);
-        setShowAddForm(false); // Hide the form after adding
+        if (editingSubject) {
+            setSubjects(subjects.map(subject => subject.id === newSubject.id ? newSubject : subject));
+        } else {
+            setSubjects([newSubject, ...subjects]);
+        }
+        setShowAddForm(false);
+        setEditingSubject(null);
     };
 
     const handleToggleAttendance = (subjectId: number) => {
@@ -61,13 +76,19 @@ const Schedules = () => {
     return (
         <>
             <AddSubjectCard addSubject={toggleAddForm}/>
-            {showAddForm && <AddSubjectForm onAddSubject={handleAddSubject} />}
+            {showAddForm &&
+                <AddSubjectForm
+                    ref={addSubjectFormRef}
+                    onAddSubject={handleAddSubject}
+                    editingSubject={editingSubject}
+                />
+            }
             {subjects.map(subject => (
                 <SubjectCard
                     key={subject.id}
-                    subjectKey={subject.id}
                     subject={subject}
                     onToggleAttendance={handleToggleAttendance}
+                    onEdit={handleEditSubject}
                 />
             ))}
         </>
