@@ -1,24 +1,39 @@
-import React, {Fragment, useRef,} from "react";
+import React, {Fragment, useEffect, useRef, useState,} from "react";
 import {subjectImage} from "../../assets/images";
 import './SubjectCard.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCircle, faRefresh, faExternalLink, faPencil, faSquare, faEllipsisV} from '@fortawesome/free-solid-svg-icons';
+import {
+    faCircle,
+    faRefresh,
+    faExternalLink,
+    faPencil,
+    faSquare,
+    faEllipsisV,
+} from '@fortawesome/free-solid-svg-icons';
 import {Subject} from "../../config/interfaces";
 
 const SubjectCard = (
     {
         subject,
         onToggleAttendance,
-        onEdit,
         onImageChange,
+        onTextChange,
     } : {
         subject: Subject,
         onToggleAttendance: (subjectKey: number) => void,
-        onEdit: (subject: Subject) => void,
         onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+        onTextChange: (field: string, value: string) => void,
     }) => {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const titleInputRef = useRef<HTMLInputElement>(null);
+    const [editTitle, setEditTitle,] = useState(false);
+
+    useEffect(() => {
+        if (editTitle) {
+            titleInputRef.current?.focus();
+        }
+    }, [editTitle]);
 
     const handleAddImageClick = () => {
         fileInputRef.current?.click();
@@ -38,7 +53,7 @@ const SubjectCard = (
                         <img className={'subjectCoverImage'} alt={'subjectImage'} src={subject.image || subjectImage}/>
                         <div className='addSubjectImageButton' onClick={handleAddImageClick}>
                             <FontAwesomeIcon className='icon' icon={faRefresh}/>
-                            <p>Change program cover</p>
+                            <p>Change subject image</p>
                         </div>
                         <input
                             type='file'
@@ -79,22 +94,38 @@ const SubjectCard = (
                             <div className={'sectionLabel'}>
                                 Subject Title
                             </div>
-                            <div className={'subjectName'}>
-                                <div className={'activeIcon'}>
-                                    <FontAwesomeIcon
-                                        width={12}
-                                        height={12}
-                                        color={'#30A1FF'}
-                                        icon={faSquare}
-                                    />
-                                </div>
-                                <div className={'subjectNameText'}>
-                                    {subject.name}
-                                </div>
-                                <div className={'iconEditSubject'} onClick={() => onEdit(subject)}>
-                                    <FontAwesomeIcon icon={faPencil}/>
-                                </div>
-                            </div>
+                            {
+                                editTitle ? (
+                                    <>
+                                        <div className="icon-input">
+                                            <input
+                                                ref={titleInputRef}
+                                                value={subject.name}
+                                                type={'text'}
+                                                onChange={(e) => onTextChange('name', e.target.value)}
+                                                onBlur={() => setEditTitle(false)}
+                                            />
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className={'subjectName'}>
+                                        <div className={'activeIcon'}>
+                                            <FontAwesomeIcon
+                                                width={12}
+                                                height={12}
+                                                color={'#30A1FF'}
+                                                icon={faSquare}
+                                            />
+                                        </div>
+                                        <div className={'subjectNameText'}>
+                                            {subject.name}
+                                        </div>
+                                        <div className={'iconEditSubject'} onClick={() => setEditTitle(true)}>
+                                            <FontAwesomeIcon icon={faPencil}/>
+                                        </div>
+                                    </div>
+                                )
+                            }
                         </div>
                         <div>
                             <FontAwesomeIcon color={'#90949f'} icon={faEllipsisV}/>
@@ -108,7 +139,7 @@ const SubjectCard = (
                                 <input
                                     type="text"
                                     id="startTime"
-                                    readOnly={true}
+                                    onChange={(e) => onTextChange('startTime', e.target.value)}
                                     value={subject.startTime}
                                     placeholder="Enter time"
                                 />
@@ -121,7 +152,7 @@ const SubjectCard = (
                                 <input
                                     type="text"
                                     id="endTime"
-                                    readOnly={true}
+                                    onChange={(e) => onTextChange('endTime', e.target.value)}
                                     value={subject.endTime}
                                     placeholder="Enter time"
                                 />
@@ -133,7 +164,7 @@ const SubjectCard = (
                             <label htmlFor="description" className={'sectionLabel'}>Subject description</label>
                             <div className="textAreaInput">
                                 <textarea
-                                    readOnly={true}
+                                    onChange={(e) => onTextChange('description', e.target.value)}
                                     value={subject.description}
                                     className={'w-full p-2'}
                                     rows={5}

@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
+import React, { useRef, useState} from "react";
 import {subjectImage} from "../../assets/images";
 import './AddSubjectForm.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -17,8 +17,7 @@ interface AddSubjectFormProps {
     editingSubject?: Subject | null;
 }
 
-const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectFormProps>(
-    ({ onAddSubject, editingSubject }, ref) => {
+const AddSubjectForm = ({ onAddSubject, editingSubject }: AddSubjectFormProps) => {
 
     const nameInputRef = useRef<HTMLInputElement>(null);
     const [image, setImage] = useState(editingSubject?.image || undefined);
@@ -37,12 +36,6 @@ const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectForm
             fileReader.readAsDataURL(event.target.files[0]);
         }
     };
-
-    useImperativeHandle(ref, () => ({
-        focusNameInput: () => {
-            nameInputRef.current?.focus();
-        },
-    }));
 
     const initialState: AddSubject = editingSubject
         ? { ...editingSubject }
@@ -70,7 +63,7 @@ const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectForm
 
         if (editingSubject) {
             // Update existing subject
-            onAddSubject({ ...editingSubject, ...formState, image });
+            onAddSubject({ ...editingSubject, image });
 
         } else {
             const newSubject: Subject = {
@@ -239,6 +232,6 @@ const AddSubjectForm = forwardRef<{ focusNameInput: () => void }, AddSubjectForm
             </div>
         </form>
     )
-});
+};
 
 export {AddSubjectForm,};

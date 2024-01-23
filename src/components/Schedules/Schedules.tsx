@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import './Schedules.css';
 import {AddSubjectCard} from "../AddSubjectCard";
 import {SubjectCard} from "../SubjectCard";
@@ -38,25 +38,11 @@ export const mockSubjects: Subject[] = [
 const Schedules = () => {
     const [subjects, setSubjects] = useState<Subject[]>(mockSubjects);
     const [showAddForm, setShowAddForm] = useState(false);
-    const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
-    const addSubjectFormRef = useRef<{ focusNameInput: () => void }>(null);
-
-
-    const handleEditSubject = (subject: Subject) => {
-        setEditingSubject(subject);
-        setShowAddForm(true); // Show the form for editing
-        setTimeout(() => addSubjectFormRef.current?.focusNameInput(), 5);
-    };
 
 
     const handleAddSubject = (newSubject: Subject) => {
-        if (editingSubject) {
-            setSubjects(subjects.map(subject => subject.id === newSubject.id ? newSubject : subject));
-        } else {
-            setSubjects([newSubject, ...subjects]);
-        }
+        setSubjects([newSubject, ...subjects]);
         setShowAddForm(false);
-        setEditingSubject(null);
     };
 
     const handleToggleAttendance = (subjectId: number) => {
@@ -86,14 +72,21 @@ const Schedules = () => {
         }
     };
 
+    const handleTextChange = (subjectId: number, field: string, value: string) => {
+        setSubjects(subjects.map(subject => {
+            if (subject.id === subjectId) {
+                return { ...subject, [field]: value };
+            }
+            return subject;
+        }));
+    };
+
     return (
         <>
             <AddSubjectCard addSubject={toggleAddForm}/>
             {showAddForm &&
                 <AddSubjectForm
-                    ref={addSubjectFormRef}
                     onAddSubject={handleAddSubject}
-                    editingSubject={editingSubject}
                 />
             }
             {subjects.map(subject => (
@@ -101,8 +94,8 @@ const Schedules = () => {
                     key={subject.id}
                     subject={subject}
                     onToggleAttendance={handleToggleAttendance}
-                    onEdit={handleEditSubject}
                     onImageChange={(event) => handleFileInputChange(subject.id, event)}
+                    onTextChange={(field, value) => handleTextChange(subject.id, field, value)}
                 />
             ))}
         </>
