@@ -3,17 +3,42 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPlus} from '@fortawesome/free-solid-svg-icons';
 import './AddSubjectCard.css';
 
-const AddSubjectCard = ({addSubject,} : {addSubject: () => void}) => {
+interface AddSubjectCardProps {
+    addSubject: () => void;
+    startTime?: string;
+    endTime?: string;
+}
+
+const AddSubjectCard = ({addSubject, startTime, endTime,} : AddSubjectCardProps) => {
+
+    const calculateGap = () => {
+        if (!startTime || !endTime) {
+            return '';
+        }
+
+        const [startHours, startMinutes] = startTime.split(':').map(Number);
+        const [endHours, endMinutes] = endTime.split(':').map(Number);
+
+        const startDate = new Date(0, 0, 0, startHours, startMinutes);
+        const endDate = new Date(0, 0, 0, endHours, endMinutes);
+
+        const diff = endDate.getTime() - startDate.getTime(); // Convert dates to timestamps
+        const hours = Math.floor(diff / 3600000); // milliseconds to hours
+        const minutes = Math.floor((diff % 3600000) / 60000); // remainder to minutes
+
+        return `${hours}:${minutes.toString().padStart(2, '0')} hr gap`;
+    };
+
     return (
         <div className="cardWrapper">
             <div className="addCard">
             <div className="timeSlot">
                 <div className="time">
-                    10:30 - 12:00
+                    {startTime} - {endTime}
                 </div>
                 <div className="separator"></div>
                 <div className="timeGap">
-                    1:30 hr gap
+                    {calculateGap()}
                 </div>
             </div>
             <div className="mobileSeparator"></div>
@@ -26,7 +51,6 @@ const AddSubjectCard = ({addSubject,} : {addSubject: () => void}) => {
             <div className="spacer"></div>
         </div>
         </div>
-
     )
 }
 

@@ -12,18 +12,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {Subject} from "../../config/interfaces";
 
+interface SubjectCardProps {
+    subject: Subject;
+    onToggleAttendance: (subjectKey: number) => void;
+    onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onTextChange: (field: string, value: string) => void;
+}
+
 const SubjectCard = (
     {
         subject,
         onToggleAttendance,
         onImageChange,
         onTextChange,
-    } : {
-        subject: Subject,
-        onToggleAttendance: (subjectKey: number) => void,
-        onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-        onTextChange: (field: string, value: string) => void,
-    }) => {
+    } : SubjectCardProps ) => {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const titleInputRef = useRef<HTMLInputElement>(null);
@@ -133,12 +135,12 @@ const SubjectCard = (
                     </div>
                     <div className={'startEndTime'}>
                         <div className="input-containerTime">
-                            <label htmlFor="startTime" className={'sectionLabel'}>Subject start time</label>
+                            <label htmlFor={`startTime-${subject.id}`} className={'sectionLabel'}>Subject start time</label>
                             <div className="icon-input">
                                 <FontAwesomeIcon icon={faCircle}/>
                                 <input
                                     type="text"
-                                    id="startTime"
+                                    id={`startTime-${subject.id}`}
                                     onChange={(e) => onTextChange('startTime', e.target.value)}
                                     value={subject.startTime}
                                     placeholder="Enter time"
@@ -146,12 +148,12 @@ const SubjectCard = (
                             </div>
                         </div>
                         <div className="input-containerTime">
-                            <label htmlFor="endTime" className={'sectionLabel'}>Subject end time</label>
+                            <label htmlFor={`endTime-${subject.id}`} className={'sectionLabel'}>Subject end time</label>
                             <div className="icon-input">
                                 <FontAwesomeIcon icon={faCircle}/>
                                 <input
                                     type="text"
-                                    id="endTime"
+                                    id={`endTime-${subject.id}`}
                                     onChange={(e) => onTextChange('endTime', e.target.value)}
                                     value={subject.endTime}
                                     placeholder="Enter time"
@@ -161,14 +163,14 @@ const SubjectCard = (
                     </div>
                     <div className={'subjectDescription'}>
                         <div className="input-container">
-                            <label htmlFor="description" className={'sectionLabel'}>Subject description</label>
+                            <label htmlFor={`description-${subject.id}`} className={'sectionLabel'}>Subject description</label>
                             <div className="textAreaInput">
                                 <textarea
                                     onChange={(e) => onTextChange('description', e.target.value)}
                                     value={subject.description}
                                     className={'w-full p-2'}
                                     rows={5}
-                                    id="description"
+                                    id={`description-${subject.id}`}
                                     placeholder="Enter text"
                                 />
                             </div>

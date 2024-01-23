@@ -15,9 +15,11 @@ import {AddSubject, Subject} from "../../config/interfaces";
 interface AddSubjectFormProps {
     onAddSubject: (newSubject: Subject) => void;
     editingSubject?: Subject | null;
+    defaultStartTime?: string;
+    defaultEndTime?: string;
 }
 
-const AddSubjectForm = ({ onAddSubject, editingSubject }: AddSubjectFormProps) => {
+const AddSubjectForm = ({ onAddSubject, editingSubject, defaultStartTime, defaultEndTime }: AddSubjectFormProps) => {
 
     const nameInputRef = useRef<HTMLInputElement>(null);
     const [image, setImage] = useState(editingSubject?.image || undefined);
@@ -41,8 +43,8 @@ const AddSubjectForm = ({ onAddSubject, editingSubject }: AddSubjectFormProps) =
         ? { ...editingSubject }
         : {
             name: "",
-            startTime: "",
-            endTime: "",
+            startTime: defaultStartTime || "",
+            endTime: defaultEndTime || "",
             description: "",
             attendance: false,
             image: "",
@@ -52,7 +54,7 @@ const AddSubjectForm = ({ onAddSubject, editingSubject }: AddSubjectFormProps) =
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Convert times to Date objects for comparison
+        // Converts times to Date objects for comparison
         const startTime = new Date(`1970-01-01T${formState.startTime}`);
         const endTime = new Date(`1970-01-01T${formState.endTime}`);
 
@@ -187,13 +189,15 @@ const AddSubjectForm = ({ onAddSubject, editingSubject }: AddSubjectFormProps) =
                         <div className="input-containerTime">
                             <label htmlFor="startTime" className={'sectionLabel'}>Subject start time</label>
                             <div className="icon-input">
-                                <FontAwesomeIcon icon={faCircle}/>
+                                <FontAwesomeIcon icon={faCircle} className={'pr-2'}/>
                                 <input
                                     type="time"
                                     required={true}
                                     id="startTime"
                                     name={'startTime'}
                                     value={formState.startTime}
+                                    min={defaultStartTime}
+                                    max={defaultEndTime}
                                     onChange={handleInputChange}
                                     placeholder="Enter time"/>
                             </div>
@@ -201,12 +205,14 @@ const AddSubjectForm = ({ onAddSubject, editingSubject }: AddSubjectFormProps) =
                         <div className="input-containerTime">
                             <label htmlFor="endTime" className={'sectionLabel'}>Subject end time</label>
                             <div className="icon-input">
-                                <FontAwesomeIcon icon={faCircle}/>
+                                <FontAwesomeIcon icon={faCircle} className={'pr-2'}/>
                                 <input
                                     type="time"
                                     required={true}
                                     id="endTime"
                                     value={formState.endTime}
+                                    min={defaultStartTime}
+                                    max={defaultEndTime}
                                     name="endTime"
                                     onChange={handleInputChange}
                                     placeholder="Enter time"/>
