@@ -141,8 +141,8 @@ const SubjectCard = (
                                 <input
                                     type="text"
                                     id={`startTime-${subject.id}`}
-                                    onChange={(e) => onTextChange('startTime', e.target.value)}
-                                    value={subject.startTime}
+                                    onBlur={(e) => onTextChange('startTime', e.target.value)}
+                                    defaultValue={subject.startTime}
                                     placeholder="Enter time"
                                 />
                             </div>
@@ -154,8 +154,8 @@ const SubjectCard = (
                                 <input
                                     type="text"
                                     id={`endTime-${subject.id}`}
-                                    onChange={(e) => onTextChange('endTime', e.target.value)}
-                                    value={subject.endTime}
+                                    onBlur={(e) => onTextChange('endTime', e.target.value)}
+                                    defaultValue={subject.endTime}
                                     placeholder="Enter time"
                                 />
                             </div>
@@ -166,8 +166,8 @@ const SubjectCard = (
                             <label htmlFor={`description-${subject.id}`} className={'sectionLabel'}>Subject description</label>
                             <div className="textAreaInput">
                                 <textarea
-                                    onChange={(e) => onTextChange('description', e.target.value)}
-                                    value={subject.description}
+                                    onBlur={(e) => onTextChange('description', e.target.value)}
+                                    defaultValue={subject.description}
                                     className={'w-full p-2'}
                                     rows={5}
                                     id={`description-${subject.id}`}

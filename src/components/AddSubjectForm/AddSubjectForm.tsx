@@ -8,7 +8,6 @@ import {
     faExternalLink,
     faFloppyDisk,
     faSquare,
-    faEllipsisV
 } from '@fortawesome/free-solid-svg-icons';
 import {AddSubject, Subject} from "../../config/interfaces";
 
@@ -106,7 +105,7 @@ const AddSubjectForm = ({ onAddSubject, editingSubject, defaultStartTime, defaul
                         <img className={'subjectCoverImage'} alt={'subjectImage'} src={image || subjectImage}/>
                         <div className='addSubjectImageButton'>
                             <FontAwesomeIcon className='icon' icon={faRefresh}/>
-                            <p>Change program cover</p>
+                            <p>Change subject image</p>
                         </div>
                         <input
                             type="file"
@@ -180,9 +179,6 @@ const AddSubjectForm = ({ onAddSubject, editingSubject, defaultStartTime, defaul
                                     <FontAwesomeIcon icon={faFloppyDisk}/>
                                 </button>
                             </div>
-                        </div>
-                        <div>
-                            <FontAwesomeIcon color={'#90949f'} icon={faEllipsisV}/>
                         </div>
                     </div>
                     <div className={'startEndTime'}>
